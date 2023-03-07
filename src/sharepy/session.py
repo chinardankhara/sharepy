@@ -8,9 +8,14 @@ from . import __version__
 from . import auth
 from . import errors
 
-
-def connect(site, username=None, password=None):
-    username = username or input('Enter your username: ')
+def connect(site, use_env_vars=False):
+    if use_env_vars:
+        username = os.getenv('SHAREPOINT_USERNAME')
+        password = os.getenv('SHAREPOINT_PASSWORD')
+    else:
+        username = username or input('Enter your username: ')
+        autoauth = auth.detect(username=username, password=password)
+        
     autoauth = auth.detect(username=username, password=password)
     return SharePointSession(site, auth=autoauth)
 
